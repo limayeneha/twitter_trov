@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <item android:id="@+id/create_new"
+            android:icon="@android:drawable/ic_menu_add"
+            android:title="@string/create_new"
+            app:showAsAction="always"
+            android:onClick="addANewTweet"
+         />
+        <item android:id="@+id/logout_action"
+            android:title="@string/logout"
+            app:showAsAction="always"
+            android:onClick="logoutUser"
+            />
+        <item android:id="@+id/addExtraTweets"
+            android:title="@string/extra"
+            app:showAsAction="never"
+            android:onClick="addTestTweets"
+            />
+
+</menu>

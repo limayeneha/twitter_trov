@@ -1,0 +1,35 @@
+<resources>
+
+    //Login Actiity
+    <string name="app_name">Twitter_Trov</string>
+    <string name="pwd_hint">Enter Password</string>
+    <string name="username_hint">Enter Username</string>
+    <string name="title_text">Welcome to the Twitter Client</string>
+
+    //TweetsListActivity
+    <string name="create_new">Create a new tweet"</string>
+    <string name="logout">Logout</string>
+    <string name="extra">Extra</string>
+
+    //AddTweets Activity
+    <string name="item_name">Item Name:</string>
+    <string name="new_item_hint">Add a new item</string>
+    <string name="due_date">Due date:</string>
+    <string name="priority">Priority:</string>
+
+    //AddTweets Activity menu
+    <string name="save_new">New Tweet</string>
+    <string name="cancel">Cancel</string>
+    <string name="login_btn">Login</string>
+    <string name="add_tweet_dialog">New tweet:</string>
+
+    //SharedPrefs values
+    <string name="isLogin">isLogin</string>
+    <string name="username">trov</string>
+    <string name="password">trov</string>
+    <string name="user">user</string>
+    <string name="invalid_user">Invalid username or password</string>
+    <string name="tweets_list">tweets_list</string>
+    <string name="last_shown">last_shown</string>
+
+</resources>
