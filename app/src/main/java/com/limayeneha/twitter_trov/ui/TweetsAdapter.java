@@ -2,6 +2,7 @@ package com.limayeneha.twitter_trov.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.limayeneha.twitter_trov.R;
+
+import com.limayeneha.twitter_trov.databinding.TweetsListViewBinding;
 import com.limayeneha.twitter_trov.model.Tweet;
+import com.limayeneha.twitter_trov.viewmodel.ItemTweetViewModel;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,17 +28,23 @@ import java.util.List;
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.PViewHolder> {
 
     private List<Tweet> tweets = new ArrayList<Tweet>();
-    private Activity activity;
-    Tweet tweet;
     private final Context mContext;
 
     public class PViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvTweet, tvDate;
+        private TweetsListViewBinding mTweetsListViewBinding;
 
-        public PViewHolder(View view) {
-            super(view);
-            tvTweet = (TextView) view.findViewById(R.id.tvTweet);
-            tvDate = (TextView) view.findViewById(R.id.tvDate);
+        public PViewHolder(TweetsListViewBinding tweetsListViewBinding) {
+            super(tweetsListViewBinding.itemTweet);
+            this.mTweetsListViewBinding = tweetsListViewBinding;
+        }
+
+        void bindTweet(Tweet tweet) {
+            if (mTweetsListViewBinding.getTweetViewModel() == null) {
+                mTweetsListViewBinding.setTweetViewModel(
+                        new ItemTweetViewModel(tweet));
+            } else {
+                mTweetsListViewBinding.getTweetViewModel().setTweet(tweet);
+            }
         }
     }
 
@@ -50,18 +60,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.PViewHolde
 
     @Override
     public PViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.tweets_list_view, parent, false);
-
-        return new PViewHolder(itemView);
+        TweetsListViewBinding itemTweetBinding =
+                DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.tweets_list_view,
+                        parent, false);
+        return new PViewHolder(itemTweetBinding);
     }
 
     @Override
     public void onBindViewHolder(PViewHolder holder, int position) {
-        Tweet tweet = tweets.get(position);
-        holder.tvTweet.setText(tweet.getTweetText());
-        holder.tvDate.setText(getDatePostedString(tweet.getDatePosted()));
+        holder.bindTweet(tweets.get(position));
     }
 
     @Override
@@ -69,10 +76,5 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.PViewHolde
         return tweets.size();
     }
 
-    public String getDatePostedString(Date date) {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm");
-        return dateFormat.format(date);
-
-    }
 
 }

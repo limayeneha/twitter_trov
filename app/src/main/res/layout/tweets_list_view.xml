@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="tweetViewModel"
+            type="com.limayeneha.twitter_trov.viewmodel.ItemTweetViewModel" />
+    </data>
+
+<RelativeLayout
+    android:id="@+id/item_tweet"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/activity_horizontal_margin"
@@ -16,7 +26,8 @@
         android:layout_centerVertical="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textSize="18sp"
-        android:textStyle="normal|bold" />
+        android:textStyle="normal|bold"
+        android:text='@{tweetViewModel.tweetText}'/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,7 +37,9 @@
         android:layout_alignBottom="@+id/tvTweet"
         android:layout_centerVertical="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:dateformatted='@{tweetViewModel.datePosted}'
         android:textSize="18sp" />
 
 
 </RelativeLayout>
+</layout>
