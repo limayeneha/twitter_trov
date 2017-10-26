@@ -17,17 +17,16 @@ public class ItemTweetViewModel extends BaseObservable{
 
     private Tweet tweet;
 
-
     public ItemTweetViewModel(Tweet tweet) {
         this.tweet = tweet;
     }
 
     public String getTweetText() {
-        return tweet.getTweetText();
+        return tweet.tweetText;
     }
 
     public Date getDatePosted() {
-        return tweet.getDatePosted();
+        return tweet.datePosted;
     }
 
     public void setTweet(Tweet tweet) {

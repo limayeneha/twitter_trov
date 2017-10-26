@@ -1,60 +1,68 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.limayeneha.twitter_trov.ui.AddTweetDialog">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/my_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+    <data>
+        <variable
+            name="fragdata"
+            type="com.limayeneha.twitter_trov.model.Tweet" />
+    </data>
 
     <RelativeLayout
-        android:id="@+id/fragment_edit_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/my_toolbar"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:layout_height="match_parent"
+        tools:context="com.limayeneha.twitter_trov.ui.AddTweetDialog">
 
-
-
-        <TextView
-            android:text="@string/add_tweet_dialog"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tvNewTweetFrag"
-            android:layout_marginTop="27dp"
-            android:paddingLeft="@dimen/text_horizontal_margin"
-            android:paddingRight="18dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textSize="18sp"
-            android:textStyle="normal|bold"
             android:layout_alignParentTop="true"
-            android:layout_alignLeft="@+id/etAddTweetFrag"
-            android:layout_alignStart="@+id/etAddTweetFrag" />
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-        <EditText
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/fragment_edit_item"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:paddingLeft="@dimen/text_horizontal_margin"
-            android:id="@+id/etAddTweetFrag"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textSize="18sp"
-            android:layout_below="@+id/tvNewTweetFrag"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="26dp"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="35dp" />
+            android:layout_below="@+id/my_toolbar"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+
+            <TextView
+                android:id="@+id/tvNewTweetFrag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/etAddTweetFrag"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/etAddTweetFrag"
+                android:layout_marginTop="27dp"
+                android:paddingLeft="@dimen/text_horizontal_margin"
+                android:paddingRight="18dp"
+                android:text="@string/add_tweet_dialog"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="18sp"
+                android:textStyle="normal|bold" />
+
+            <EditText
+                android:id="@+id/etAddTweetFrag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/tvNewTweetFrag"
+                android:layout_marginLeft="26dp"
+                android:layout_marginStart="26dp"
+                android:layout_marginTop="35dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:paddingLeft="@dimen/text_horizontal_margin"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+
     </RelativeLayout>
-
-
-</RelativeLayout>
+</layout>

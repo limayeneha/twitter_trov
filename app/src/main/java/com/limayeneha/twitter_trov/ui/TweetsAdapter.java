@@ -1,13 +1,9 @@
 package com.limayeneha.twitter_trov.ui;
 
-import android.app.Activity;
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.limayeneha.twitter_trov.R;
 
@@ -15,10 +11,7 @@ import com.limayeneha.twitter_trov.databinding.TweetsListViewBinding;
 import com.limayeneha.twitter_trov.model.Tweet;
 import com.limayeneha.twitter_trov.viewmodel.ItemTweetViewModel;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,7 +21,6 @@ import java.util.List;
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.PViewHolder> {
 
     private List<Tweet> tweets = new ArrayList<Tweet>();
-    private final Context mContext;
 
     public class PViewHolder extends RecyclerView.ViewHolder {
         private TweetsListViewBinding mTweetsListViewBinding;
@@ -48,8 +40,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.PViewHolde
         }
     }
 
-    public TweetsAdapter(Context context) {
-        mContext = context;
+    public TweetsAdapter() {
     }
 
     public void setTweets(List<Tweet> newTweets) {

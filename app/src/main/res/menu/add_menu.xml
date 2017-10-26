@@ -13,10 +13,5 @@
             app:showAsAction="always"
             android:onClick="logoutUser"
             />
-        <item android:id="@+id/addExtraTweets"
-            android:title="@string/extra"
-            app:showAsAction="never"
-            android:onClick="addTestTweets"
-            />
 
 </menu>

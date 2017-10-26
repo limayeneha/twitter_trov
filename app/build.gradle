@@ -48,5 +48,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
     annotationProcessor 'com.android.databinding:compiler:2.3.0'
 
+    testCompile testingDependencies.junit
+    testCompile testingDependencies.mockito
+    testCompile testingDependencies.robolectric
 
 }

@@ -1,9 +1,10 @@
 package com.limayeneha.twitter_trov.ui;
 
+import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.limayeneha.twitter_trov.R;
+import com.limayeneha.twitter_trov.databinding.FragmentAddTweetDialogBinding;
 import com.limayeneha.twitter_trov.model.Tweet;
 import com.limayeneha.twitter_trov.model.User;
 
@@ -31,14 +33,35 @@ public class AddTweetDialog extends DialogFragment {
     private String tweetText;
     int userId;
     String username;
-
-    EditText etAddTweetFrag;
+    EditText ettweetText;
 
     private OnFragmentInteractionListener mListener;
 
-    public AddTweetDialog() {
-        // Required empty public constructor
+
+    private boolean handleMenuClick(MenuItem item) {
+        if (item.getItemId() == R.id.save_added) {
+            tweetText = ettweetText.getText().toString();
+            if (tweetText.length() < 1) {
+                Toast.makeText(AddTweetDialog.this.getActivity(), "Enter missing information.", Toast.LENGTH_SHORT).show();
+            } else {
+                Tweet addedTweet = new Tweet(tweetText, userId, new Date());
+                addedTweet.save();
+
+                OnFragmentInteractionListener listener = (OnFragmentInteractionListener) AddTweetDialog.this.getActivity();
+                listener.onFragmentInteraction(addedTweet);
+
+
+                AddTweetDialog.this.dismiss();
+                return true;
+            }
+        } else {
+            AddTweetDialog.this.dismiss();
+            return true;
+        }
+
+        return false;
     }
+
 
     public static AddTweetDialog newInstance(User user) {
         AddTweetDialog fragment = new AddTweetDialog();
@@ -61,10 +84,17 @@ public class AddTweetDialog extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_tweet_dialog, container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        FragmentAddTweetDialogBinding binding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_add_tweet_dialog, container, false);
+        binding.myToolbar.inflateMenu(R.menu.add_dialog_toolbar);
+        binding.myToolbar.setTitle("ADD A NEW TWEET");
+        binding.myToolbar.setOnMenuItemClickListener(item -> handleMenuClick(item));
+        ettweetText = binding.etAddTweetFrag;
+
+        View view = binding.getRoot();
+        return view;
     }
 
     @Override
@@ -75,48 +105,11 @@ public class AddTweetDialog extends DialogFragment {
 
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.my_toolbar);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.save_added) {
-                    if(etAddTweetFrag!=null)
-                        tweetText = etAddTweetFrag.getText().toString();
-
-                    if(etAddTweetFrag.length()<1 ) {
-                        Toast.makeText(getActivity(), "Enter missing information.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Tweet addedTweet = new Tweet(tweetText, userId, new Date());
-                        addedTweet.save();
-
-                        OnFragmentInteractionListener listener = (OnFragmentInteractionListener) getActivity();
-                        listener.onFragmentInteraction(addedTweet);
-
-
-                        dismiss();
-                        return true;
-                    }
-                } else {
-                    dismiss();
-                    return true;
-                }
-
-                return false;
-            }
-        });
-        toolbar.inflateMenu(R.menu.add_dialog_toolbar);
-        toolbar.setTitle("ADD A NEW TWEET");
-
-
-        etAddTweetFrag = (EditText) view.findViewById(R.id.etAddTweetFrag);
-
     }
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Tweet tweet);
     }
-
 
 
 }

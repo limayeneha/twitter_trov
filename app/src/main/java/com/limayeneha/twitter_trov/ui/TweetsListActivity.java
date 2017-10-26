@@ -2,6 +2,7 @@ package com.limayeneha.twitter_trov.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.databinding.DataBindingUtil;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.limayeneha.twitter_trov.R;
+import com.limayeneha.twitter_trov.databinding.ActivityTweetsListBinding;
 import com.limayeneha.twitter_trov.model.Tweet;
 import com.limayeneha.twitter_trov.model.Tweet_Table;
 import com.limayeneha.twitter_trov.model.User;
@@ -28,11 +30,13 @@ import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 
-public class TweetsListActivity extends AppCompatActivity implements AddTweetDialog.OnFragmentInteractionListener{
+public class TweetsListActivity extends AppCompatActivity implements AddTweetDialog.OnFragmentInteractionListener {
     private final int REQUEST_CODE = 20;
     private RecyclerView rvRecyclerView;
     private RecyclerView.LayoutManager lmLayoutManager;
@@ -47,7 +51,7 @@ public class TweetsListActivity extends AppCompatActivity implements AddTweetDia
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tweets_list);
+        ActivityTweetsListBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_tweets_list);
 
         Bundle extras = getIntent().getExtras();
         user = (User) extras.get(getResources().getString(R.string.user));
@@ -55,18 +59,19 @@ public class TweetsListActivity extends AppCompatActivity implements AddTweetDia
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPref.edit();
 
-        rvRecyclerView = (RecyclerView) findViewById(R.id.rvRecyclerView);
+        rvRecyclerView = binding.rvRecyclerView;
         lmLayoutManager = new LinearLayoutManager(this);
         rvRecyclerView.setLayoutManager(lmLayoutManager);
-        tweetsAdapter = new TweetsAdapter(this);
+        tweetsAdapter = new TweetsAdapter();
         rvRecyclerView.setAdapter(tweetsAdapter);
 
         String str = sharedPref.getString(getResources().getString(R.string.tweets_list), "");
 
-        Type type = new TypeToken<List<Tweet>>() { }.getType();
+        Type type = new TypeToken<List<Tweet>>() {
+        }.getType();
         tweetsList = new Gson().fromJson(str, type);
 
-        if(tweetsList==null) tweetsList = new ArrayList<>();
+        if (tweetsList == null) tweetsList = new ArrayList<>();
 
         createObservable();
     }
@@ -74,29 +79,19 @@ public class TweetsListActivity extends AppCompatActivity implements AddTweetDia
     private void createObservable() {
 
         long lastShown = sharedPref.getLong(getResources().getString(R.string.last_shown), 0l);
-        Observable<List<Tweet>> listObservable = Observable.fromArray(readTweets(new Date(lastShown)));
-        disposable = listObservable.subscribeWith(new DisposableObserver<List<Tweet>>() {
 
-            @Override
-            public void onError(Throwable e) {
+        disposable = Observable.fromCallable(() -> readTweets(new Date(lastShown)))
+                .subscribeOn(Schedulers.io())  // Do logic in a separate thread
+                .observeOn(AndroidSchedulers.mainThread()) // Once it's finished, post result in main thread
+                .doOnNext(tweets -> {
+                    tweetsList.addAll(tweets);
+                    Collections.sort(tweetsList, Tweet.datePostedComparator);
+                    tweetsAdapter.setTweets(tweetsList);
 
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-
-            @Override
-            public void onNext(List<Tweet> tweets) {
-                tweetsList.addAll(tweets);
-                Collections.sort(tweetsList, Tweet.datePostedComparator);
-                tweetsAdapter.setTweets(tweetsList);
-
-                editor.putLong(getResources().getString(R.string.last_shown), System.currentTimeMillis());
-                editor.commit();
-            }
-        });
+                    editor.putLong(getResources().getString(R.string.last_shown), System.currentTimeMillis());
+                    editor.commit();
+                })
+                .subscribe();
 
     }
 
@@ -107,7 +102,7 @@ public class TweetsListActivity extends AppCompatActivity implements AddTweetDia
         return true;
     }
 
-    public List<Tweet>  readTweets(Date date) {
+    public List<Tweet> readTweets(Date date) {
         ConditionGroup conditionGroup = ConditionGroup.clause()
                 .and(Tweet_Table.datePosted.greaterThan(date));
         return SQLite.select().
@@ -145,7 +140,7 @@ public class TweetsListActivity extends AppCompatActivity implements AddTweetDia
     @Override
     protected void onStop() {
         super.onStop();
-        if (disposable!=null && !disposable.isDisposed()) {
+        if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }
     }
@@ -155,13 +150,13 @@ public class TweetsListActivity extends AppCompatActivity implements AddTweetDia
         super.onResume();
         createObservable();
     }
-
-    public void addTestTweets(MenuItem item) {
-        Tweet addedTweet = new Tweet("new tweet", 2345, new Date());
-        addedTweet.save();
-        Tweet addedTweet1 = new Tweet("new tweet1", 2345, new Date());
-        addedTweet1.save();
-        Tweet addedTweet2 = new Tweet("new tweet2", 2345, new Date());
-        addedTweet2.save();
-    }
+//
+//    public void addTestTweets(MenuItem item) {
+//        Tweet addedTweet = new Tweet("new tweet", 2345, new Date());
+//        addedTweet.save();
+//        Tweet addedTweet1 = new Tweet("new tweet1", 2345, new Date());
+//        addedTweet1.save();
+//        Tweet addedTweet2 = new Tweet("new tweet2", 2345, new Date());
+//        addedTweet2.save();
+//    }
 }
