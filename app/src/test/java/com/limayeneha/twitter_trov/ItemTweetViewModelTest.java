@@ -51,7 +51,7 @@ public class ItemTweetViewModelTest {
         assertEquals(tweet.datePosted, itemTweetViewModel.getDatePosted());
     }
 
-    @Test public void shouldNotifyPropertyChangeWhenSetPeople() throws Exception {
+    @Test public void shouldNotifyWhenSetTweet() throws Exception {
         Tweet tweet = new Tweet();
         ItemTweetViewModel itemPeopleViewModel = new ItemTweetViewModel(tweet);
         Observable.OnPropertyChangedCallback mockCallback =
