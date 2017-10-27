@@ -6,6 +6,11 @@
     <string name="username_hint">Enter Username</string>
     <string name="title_text">Welcome to the Twitter Client</string>
 
+    <string name="invalid_email">Email is invalid</string>
+    <string name="invalid_password">Password must be at least 6 characters</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_in_message">You have signed in!</string>
+
     //TweetsListActivity
     <string name="create_new">Create a new tweet"</string>
     <string name="logout">Logout</string>
@@ -25,8 +30,8 @@
 
     //SharedPrefs values
     <string name="isLogin">isLogin</string>
-    <string name="username">trov</string>
-    <string name="password">trov</string>
+    <string name="username">test@test.com</string>
+    <string name="password">testtest</string>
     <string name="user">user</string>
     <string name="invalid_user">Invalid username or password</string>
     <string name="tweets_list">tweets_list</string>

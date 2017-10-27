@@ -1,5 +1,6 @@
 package com.limayeneha.twitter_trov.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
@@ -38,6 +39,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class TweetsListActivity extends AppCompatActivity implements AddTweetDialog.OnFragmentInteractionListener {
     private final int REQUEST_CODE = 20;
+    private static final String EXTRA_USER = "EXTRA_USER";
     private RecyclerView rvRecyclerView;
     private RecyclerView.LayoutManager lmLayoutManager;
     List<Tweet> tweetsList;
@@ -54,7 +56,7 @@ public class TweetsListActivity extends AppCompatActivity implements AddTweetDia
         ActivityTweetsListBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_tweets_list);
 
         Bundle extras = getIntent().getExtras();
-        user = (User) extras.get(getResources().getString(R.string.user));
+        user = (User) extras.get(EXTRA_USER);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPref.edit();
@@ -149,6 +151,12 @@ public class TweetsListActivity extends AppCompatActivity implements AddTweetDia
     protected void onResume() {
         super.onResume();
         createObservable();
+    }
+
+    public static Intent launchTweetsList(Context context, User user) {
+        Intent intent = new Intent(context, TweetsListActivity.class);
+        intent.putExtra(EXTRA_USER, user);
+        return intent;
     }
 //
 //    public void addTestTweets(MenuItem item) {
