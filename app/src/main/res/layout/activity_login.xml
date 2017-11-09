@@ -10,68 +10,43 @@
         android:focusableInTouchMode="true"
         android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/email_til"
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Email"
+            android:inputType="textEmailAddress" />
+
+        <TextView
+            android:id="@+id/tvEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp"
-            android:layout_marginRight="56dp"
-            android:layout_marginTop="16dp"
-            android:textColorHint="#9e9e9e">
+            android:visibility="gone" />
 
-            <EditText
-                android:id="@+id/email_et"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:maxLength="35"
-                android:textColor="#000000"
-                android:textColorHint="#9e9e9e" />
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Input Password"
+            android:inputType="textPassword" />
 
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/password_til"
+        <TextView
+            android:id="@+id/tvPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp"
-            android:layout_marginRight="56dp"
-            android:layout_marginTop="8dp"
-            android:textColorHint="#9e9e9e">
+            android:visibility="gone" />
 
-            <EditText
-                android:id="@+id/password_et"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:maxLength="20"
-                android:textColor="#000000"
-                android:textColorHint="#9e9e9e" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <LinearLayout
-            android:id="@+id/sign_in_ll"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_gravity="bottom"
-            android:background="#FFFFFF"
-            android:gravity="right|center_vertical">
-
-            <Button
-                android:id="@+id/sign_in_btn"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="56dp"
-                android:layout_marginRight="16dp"
-                android:enabled="false"
-                android:text="Sign In"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/sign_in_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:layout_marginRight="16dp"
+            android:enabled="false"
+            android:text="Sign In"
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
