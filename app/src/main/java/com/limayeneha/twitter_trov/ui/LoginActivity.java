@@ -12,40 +12,44 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.limayeneha.twitter_trov.R;
+import com.limayeneha.twitter_trov.TwitterTrovApplication;
 import com.limayeneha.twitter_trov.databinding.ActivityLoginBinding;
 import com.limayeneha.twitter_trov.model.User;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.limayeneha.twitter_trov.viewmodel.LoginViewModel;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+
 import static com.raizlabs.android.dbflow.config.FlowManager.getContext;
 
 public class LoginActivity extends AppCompatActivity {
-
+    ActivityLoginBinding binding;
     SharedPreferences sharedPref;
-    EditText etEmail;
-    EditText etPassword;
-    TextView tvEmail;
-    TextView tvPassword;
-    Button signInButton;
-    String username;
-    String pwd;
 
-    private Pattern pattern = android.util.Patterns.EMAIL_ADDRESS;
-    private Matcher matcher;
+    CompositeDisposable disposables = new CompositeDisposable();
+
+    Observable<CharSequence> emailChangeObservable;
+    Observable<CharSequence> passwordChangeObservable;
+
+    @NonNull
+    private LoginViewModel loginViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityLoginBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
 
-        etEmail = binding.etEmail;
-        etPassword = binding.etPassword;
-        signInButton = binding.signInBtn;
-        tvEmail = binding.tvEmail;
-        tvPassword = binding.tvPassword;
+        emailChangeObservable = RxTextView.textChanges(binding.etEmail);
+        passwordChangeObservable = RxTextView.textChanges(binding.etPassword);
+
+        loginViewModel = getViewModel(emailChangeObservable, passwordChangeObservable);
+        binding.setViewModel(loginViewModel);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -56,81 +60,75 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
-        Observable<CharSequence> emailChangeObservable = RxTextView.textChanges(etEmail);
-        emailChangeObservable
-                .map(this::validateEmail)
-                .subscribe(isValid -> {
-                    if (isValid || TextUtils.isEmpty(etEmail.getText())) {
-                        tvEmail.setVisibility(View.GONE);
-                    } else {
-                        tvEmail.setVisibility(View.VISIBLE);
-                        tvEmail.setText(getString(R.string.invalid_email));
-                    }
-                });
-
-
-        Observable<CharSequence> passwordChangeObservable = RxTextView.textChanges(etPassword);
-        passwordChangeObservable
-                .map(this::validatePassword)
-                .subscribe(isValid -> {
-                    if (isValid || TextUtils.isEmpty(etPassword.getText())) {
-                        tvPassword.setVisibility(View.GONE);
-                    } else {
-                        tvPassword.setVisibility(View.VISIBLE);
-                        tvPassword.setText(getString(R.string.invalid_password));
-                    }
-                });
-
-        Observable<Boolean> combinedObservables = Observable.combineLatest(emailChangeObservable, passwordChangeObservable,
-                (o1, o2) -> validateEmail(o1) && validatePassword(o2));
-        combinedObservables.subscribe(
-                (validFields -> {
-                    if (validFields) {
-                        enableSignIn();
-                    } else {
-                        disableSignIn();
-                    }
-                })
-        );
+        loginViewModel.bind();
 
 
     }
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-    // endregion
-
-    // region Helper Methods
-
-    private boolean validateEmail(CharSequence email) {
-        if (TextUtils.isEmpty(email))
-            return false;
-
-        matcher = pattern.matcher(email);
-        return matcher.matches();
+        disposables.clear();
     }
 
-    private boolean validatePassword(CharSequence password) {
-        return password.length() > 5;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        addSubscriptions();
     }
 
-    private void enableSignIn() {
-        signInButton.setEnabled(true);
-        signInButton.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
-        signInButton.setOnClickListener(v -> onSignInButtonClick());
+    private void addSubscriptions() {
+        disposables.addAll(loginViewModel.isEmailValid
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(value -> showEmailMessage(value)),
+
+                loginViewModel.isPasswordValid
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(value -> showPasswordMessage(value))
+        );
     }
 
-    private void disableSignIn() {
-        signInButton.setEnabled(false);
-        signInButton.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+    @Override
+    protected void onPause() {
+        super.onPause();
+        loginViewModel.unbound();
     }
 
-    public void onSignInButtonClick() {
-        if (etEmail != null)
-            username = etEmail.getText().toString();
-        if (etPassword != null) pwd = etPassword.getText().toString();
+    private void showEmailMessage(Boolean show) {
+        if (!show || TextUtils.isEmpty(binding.etEmail.getText())) {
+            binding.tvEmail.setVisibility(View.GONE);
+        } else {
+            binding.tvEmail.setVisibility(View.VISIBLE);
+            binding.tvEmail.setText(getString(R.string.invalid_email));
+
+        }
+    }
+
+    private void showPasswordMessage(Boolean show) {
+        if (!show || TextUtils.isEmpty(binding.etPassword.getText())) {
+            binding.tvPassword.setVisibility(View.GONE);
+        } else {
+            binding.tvPassword.setVisibility(View.VISIBLE);
+            binding.tvPassword.setText(getString(R.string.invalid_password));
+
+        }
+    }
+
+    @NonNull
+    private LoginViewModel getViewModel(Observable<CharSequence> emailChangeObservable, Observable<CharSequence> passwordChangeObservable) {
+        return ((TwitterTrovApplication) getApplication()).getViewModel(emailChangeObservable, passwordChangeObservable);
+    }
+
+
+    public void onSignInButtonClick(View view) {
+        String username ="";
+        String pwd ="";
+        if (binding.etEmail != null)
+            username = binding.etEmail.getText().toString();
+        if (binding.etPassword != null) pwd = binding.etPassword.getText().toString();
         if (username.equals(getResources().getString(R.string.username)) && pwd.equals(getResources().getString(R.string.password))) {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean(getResources().getString(R.string.isLogin), true);
@@ -143,6 +141,4 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, getResources().getString(R.string.invalid_user), Toast.LENGTH_SHORT).show();
         }
     }
-
-
 }
