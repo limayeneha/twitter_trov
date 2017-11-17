@@ -3,14 +3,10 @@ package com.limayeneha.twitter_trov.ui;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
@@ -25,8 +21,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.raizlabs.android.dbflow.config.FlowManager.getContext;
 
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
@@ -64,7 +58,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-
 
     @Override
     protected void onDestroy() {
