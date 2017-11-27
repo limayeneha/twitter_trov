@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 def dbflow_version = "3.1.1"
 
@@ -40,7 +41,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
+    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
     compile 'com.android.support:appcompat-v7:25.3.1'
@@ -56,10 +57,14 @@ dependencies {
     compile 'com.google.dagger:dagger-android-support:2.11' // if you use the support libraries
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
-    annotationProcessor 'com.android.databinding:compiler:2.3.0'
+    kapt 'com.android.databinding:compiler:2.3.1'
 
     testCompile testingDependencies.junit
     testCompile testingDependencies.mockito
     testCompile testingDependencies.robolectric
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
+}
+repositories {
+    mavenCentral()
 }
