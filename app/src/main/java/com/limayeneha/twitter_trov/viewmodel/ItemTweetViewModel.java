@@ -1,10 +1,7 @@
 package com.limayeneha.twitter_trov.viewmodel;
 
 import android.databinding.BaseObservable;
-import android.view.View;
-import android.widget.TextView;
 
-import com.limayeneha.twitter_trov.R;
 import com.limayeneha.twitter_trov.model.Tweet;
 
 import java.util.Date;
@@ -22,11 +19,11 @@ public class ItemTweetViewModel extends BaseObservable{
     }
 
     public String getTweetText() {
-        return tweet.tweetText;
+        return tweet.getTweetText();
     }
 
     public Date getDatePosted() {
-        return tweet.datePosted;
+        return tweet.getDatePosted();
     }
 
     public void setTweet(Tweet tweet) {

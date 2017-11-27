@@ -2,7 +2,6 @@ package com.limayeneha.twitter_trov;
 
 import android.databinding.Observable;
 
-import com.limayeneha.twitter_trov.model.Tweet;
 import com.limayeneha.twitter_trov.viewmodel.ItemTweetViewModel;
 
 import org.junit.Before;
