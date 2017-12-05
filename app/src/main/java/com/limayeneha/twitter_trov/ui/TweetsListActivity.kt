@@ -38,12 +38,12 @@ import io.reactivex.schedulers.Schedulers
 
 class TweetsListActivity : AppCompatActivity(), AddTweetDialog.OnFragmentInteractionListener {
     private val REQUEST_CODE = 20
-    private var rvRecyclerView: RecyclerView? = null
-    private var lmLayoutManager: RecyclerView.LayoutManager? = null
+    private lateinit var rvRecyclerView: RecyclerView
+    private lateinit var lmLayoutManager: RecyclerView.LayoutManager
     internal var tweetsList: MutableList<Tweet>? = null
     internal lateinit var tweetsAdapter: TweetsAdapter
     internal lateinit var user: User
-    private var disposable: Disposable? = null
+    private lateinit var disposable: Disposable
     internal lateinit var sharedPref: SharedPreferences
     internal lateinit var editor: SharedPreferences.Editor
 
@@ -59,10 +59,10 @@ class TweetsListActivity : AppCompatActivity(), AddTweetDialog.OnFragmentInterac
         editor = sharedPref.edit()
 
         rvRecyclerView = binding.rvRecyclerView
-        lmLayoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
-        rvRecyclerView!!.layoutManager = lmLayoutManager
+        lmLayoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager
+        rvRecyclerView.layoutManager = lmLayoutManager
         tweetsAdapter = TweetsAdapter()
-        rvRecyclerView!!.adapter = tweetsAdapter
+        rvRecyclerView.adapter = tweetsAdapter
 
         val str = sharedPref.getString(resources.getString(R.string.tweets_list), "")
 
@@ -71,7 +71,7 @@ class TweetsListActivity : AppCompatActivity(), AddTweetDialog.OnFragmentInterac
         }.type
         tweetsList = Gson().fromJson<List<Tweet>>(str, type) as MutableList<Tweet>?
 
-        if (tweetsList == null) tweetsList = ArrayList()
+        tweetsList = ArrayList()
 
         createObservable()
     }
@@ -86,7 +86,7 @@ class TweetsListActivity : AppCompatActivity(), AddTweetDialog.OnFragmentInterac
                 .doOnNext { tweets ->
                     tweetsList!!.addAll(tweets)
                     Collections.sort(tweetsList!!, Tweet.datePostedComparator)
-                    tweetsAdapter.setTweets(tweetsList)
+                    tweetsAdapter.setTweets(tweetsList!!)
 
                     editor.putLong(resources.getString(R.string.last_shown), System.currentTimeMillis())
                     editor.commit()
@@ -105,7 +105,6 @@ class TweetsListActivity : AppCompatActivity(), AddTweetDialog.OnFragmentInterac
         val conditionGroup = ConditionGroup.clause()
                 .and(Tweet_Table.datePosted.greaterThan(date))
         return SQLite.select().from(Tweet::class.java).where(conditionGroup).queryList()
-//        return SQLite.select().from(Tweet::class.java).queryList()
 
     }
 
@@ -135,8 +134,8 @@ class TweetsListActivity : AppCompatActivity(), AddTweetDialog.OnFragmentInterac
 
     override fun onStop() {
         super.onStop()
-        if (disposable != null && !disposable!!.isDisposed) {
-            disposable!!.dispose()
+        if (!disposable.isDisposed) {
+            disposable.dispose()
         }
     }
 

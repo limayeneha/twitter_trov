@@ -5,6 +5,7 @@ apply from: 'gradle-scripts/dependencies.gradle'
 buildscript {
     ext.kotlin_version = '1.1.60'
     repositories {
+        google()
         jcenter()
     }
     dependencies {
@@ -19,6 +20,7 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
         maven { url "https://jitpack.io" }
     }
