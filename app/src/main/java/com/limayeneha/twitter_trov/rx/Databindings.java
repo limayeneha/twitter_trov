@@ -22,20 +22,4 @@ public class Databindings {
     public static <T> Observable<T> toObservable(@NonNull ObservableField<T> observableField, boolean replay) {
         return Observable.create(Databindings$$Lambda$1.lambdaFactory$(replay, observableField));
     }
-
-    public static <T> Observable<List<T>> toObservable(@NonNull ObservableList<T> observableList) {
-        return toObservable(observableList, true);
-    }
-
-    public static <T> Observable<List<T>> toObservable(@NonNull ObservableList<T> observableList, boolean replay) {
-        return Observable.create(Databindings$$Lambda$2.lambdaFactory$(replay, observableList));
-    }
-
-    public static <T extends BaseObservable> Observable<T> toObservable(@NonNull T baseObservable) {
-        return toObservable(baseObservable, true);
-    }
-
-    public static <T extends BaseObservable> Observable<T> toObservable(@NonNull T baseObservable, boolean replay) {
-        return Observable.create(Databindings$$Lambda$3.lambdaFactory$(replay, baseObservable));
-    }
 }
