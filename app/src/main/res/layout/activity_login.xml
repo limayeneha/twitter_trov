@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Email"
+            android:text="@={viewModel.email}"
             android:inputType="textEmailAddress" />
 
         <TextView
@@ -37,6 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:text="@={viewModel.password}"
             android:hint="Input Password"
             android:inputType="textPassword" />
 

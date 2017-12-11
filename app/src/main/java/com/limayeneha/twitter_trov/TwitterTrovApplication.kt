@@ -29,7 +29,7 @@ class TwitterTrovApplication : Application() {
     }
 
     @NonNull
-    fun getViewModel(emailChangeObservable: Observable<CharSequence>, passwordChangeObservable: Observable<CharSequence>): LoginViewModel {
-        return LoginViewModel(emailChangeObservable, passwordChangeObservable)
+    fun getViewModel(): LoginViewModel {
+        return LoginViewModel()
     }
 }

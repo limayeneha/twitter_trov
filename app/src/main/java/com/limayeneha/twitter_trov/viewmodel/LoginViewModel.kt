@@ -2,6 +2,7 @@ package com.limayeneha.twitter_trov.viewmodel
 
 import android.databinding.BaseObservable
 import android.databinding.ObservableBoolean
+import android.databinding.ObservableField
 import android.text.TextUtils
 import android.util.Patterns
 import java.util.regex.Matcher
@@ -11,14 +12,16 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.BehaviorSubject
 import com.limayeneha.twitter_trov.HelperFunctions.addTo
+import com.limayeneha.twitter_trov.rx.Databindings
 
 /**
  * Created by limayeneha on 11/16/17.
  */
 
-class LoginViewModel(internal var emailChangeObservable: Observable<CharSequence>,
-    internal var passwordChangeObservable: Observable<CharSequence>) : BaseObservable() {
+class LoginViewModel() : BaseObservable() {
   internal var combinedObservables: Observable<Boolean>
+  val email = ObservableField<String>()
+  val password = ObservableField<String>()
 
   @NonNull
   val isEmailValid = BehaviorSubject.create<Boolean>()
@@ -36,13 +39,13 @@ class LoginViewModel(internal var emailChangeObservable: Observable<CharSequence
   private lateinit var matcher: Matcher
 
   init {
-    this.combinedObservables = Observable.combineLatest(emailChangeObservable,
-        passwordChangeObservable,
+    this.combinedObservables = Observable.combineLatest(Databindings.toObservable(email),
+        Databindings.toObservable(password),
         BiFunction { o1, o2 -> validateEmail(o1) && validatePassword(o2) })
   }
 
   fun bind() {
-    emailChangeObservable
+      Databindings.toObservable(email)
         .map<Boolean>( { this.validateEmail(it) })
         .subscribe { isValid ->
           if (isValid) {
@@ -51,7 +54,7 @@ class LoginViewModel(internal var emailChangeObservable: Observable<CharSequence
             isEmailValid.onNext(true)
           }
         }.addTo(disposable)
-    passwordChangeObservable
+    Databindings.toObservable(password)
         .map<Boolean>({ this.validatePassword(it) })
         .subscribe { isValid ->
           if (isValid) {

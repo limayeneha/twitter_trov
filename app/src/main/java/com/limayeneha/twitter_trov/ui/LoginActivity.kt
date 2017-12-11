@@ -2,26 +2,23 @@ package com.limayeneha.twitter_trov.ui
 
 import android.content.SharedPreferences
 import android.databinding.DataBindingUtil
+import android.databinding.ObservableField
+import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
-
-import com.jakewharton.rxbinding2.widget.RxTextView
+import com.limayeneha.twitter_trov.HelperFunctions.addTo
 import com.limayeneha.twitter_trov.R
 import com.limayeneha.twitter_trov.TwitterTrovApplication
 import com.limayeneha.twitter_trov.databinding.ActivityLoginBinding
 import com.limayeneha.twitter_trov.model.User
 import com.limayeneha.twitter_trov.viewmodel.LoginViewModel
-
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.annotations.NonNull
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import com.limayeneha.twitter_trov.HelperFunctions.addTo
 
 class LoginActivity : AppCompatActivity() {
   internal lateinit var binding: ActivityLoginBinding
@@ -29,8 +26,8 @@ class LoginActivity : AppCompatActivity() {
 
   internal var disposables = CompositeDisposable()
 
-  internal lateinit var emailChangeObservable: Observable<CharSequence>
-  internal lateinit var passwordChangeObservable: Observable<CharSequence>
+  val email = ObservableField<String>()
+  val password = ObservableField<String>()
 
   private lateinit var loginViewModel: LoginViewModel
 
@@ -38,10 +35,7 @@ class LoginActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
-    emailChangeObservable = RxTextView.textChanges(binding.etEmail)
-    passwordChangeObservable = RxTextView.textChanges(binding.etPassword)
-
-    loginViewModel = getViewModel(emailChangeObservable, passwordChangeObservable)
+    loginViewModel = getViewModel()
     binding.viewModel = loginViewModel
 
     sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
@@ -107,9 +101,8 @@ class LoginActivity : AppCompatActivity() {
   }
 
   @NonNull
-  private fun getViewModel(emailChangeObservable: Observable<CharSequence>,
-      passwordChangeObservable: Observable<CharSequence>): LoginViewModel {
-    return (application as TwitterTrovApplication).getViewModel(emailChangeObservable, passwordChangeObservable)
+  private fun getViewModel(): LoginViewModel {
+    return (application as TwitterTrovApplication).getViewModel()
   }
 
 
